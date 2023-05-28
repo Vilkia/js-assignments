@@ -16,9 +16,31 @@
  *     { abbreviation : 'NbW',   azimuth : 348.75 }
  *  ]
  */
+function Point(abbr, azimuth) {
+    this.abbreviation = abbr;
+    this.azimuth = azimuth;
+}
 function createCompassPoints() {
-    throw new Error('Not implemented');
-    var sides = ['N','E','S','W'];  // use array of cardinal directions only!
+    let result = new Array(33)
+    var sides = ['N', 'E', 'S', 'W']
+    sides.forEach((val, idx) => result[idx * 8] = val)
+    function rec_travel(start_str, finish_str, start_pos, finish_pos) {
+        let medium_pos = (finish_pos + start_pos) / 2;
+        if (!Number.isInteger(medium_pos))
+            return;
+        let medium_str = start_str + finish_str;
+        if (medium_str.length > 3) {
+            let main_idx = (finish_pos - start_pos > 0 ? Math.ceil : Math.trunc)(medium_pos / 8) % 4;
+            medium_str = start_str + 'b' + sides[main_idx];
+        }
+        if (!result[medium_pos]) {
+            result[medium_pos] = medium_str;
+        }
+        rec_travel(start_str, result[medium_pos], start_pos, medium_pos)
+        rec_travel(finish_str, result[medium_pos], finish_pos, medium_pos)
+    }
+    rec_travel('N', 'N', 0, 32);
+    return result.map((abbr, idx) => new Point(abbr, 11.25 * idx));
 }
 
 
@@ -56,7 +78,7 @@ function createCompassPoints() {
  *   'nothing to do' => 'nothing to do'
  */
 function* expandBraces(str) {
-    throw new Error('Not implemented');
+    return null;
 }
 
 
@@ -88,7 +110,7 @@ function* expandBraces(str) {
  *
  */
 function getZigZagMatrix(n) {
-    throw new Error('Not implemented');
+    return null;
 }
 
 
